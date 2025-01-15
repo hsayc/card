@@ -85,17 +85,6 @@ export default function Page() {
       moveTarget(e.clientX, e.clientY);
     }
 
-    function handleClick(e: MouseEvent) {
-      if (!targetEl) return;
-      const rect = targetEl.getBoundingClientRect();
-      const distance = getDistance(
-        e.clientX,
-        e.clientY,
-        rect.left + rect.width / 2,
-        rect.top + rect.height / 2
-      );
-    }
-
     function handleResize() {
       if (!targetEl) return;
       const rect = targetEl.getBoundingClientRect();
@@ -111,12 +100,10 @@ export default function Page() {
     targetEl.style.top = '50%';
 
     document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('click', handleClick);
     window.addEventListener('resize', handleResize);
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('click', handleClick);
       window.removeEventListener('resize', handleResize);
     };
   }, []);
