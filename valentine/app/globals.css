@@ -46,11 +46,11 @@ body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   color: white;
 }
+
 .yes-button {
   position: absolute;
-  left: calc(50% - 90px); /* Move it left of center */
+  left: calc(50% - 90px);
   top: 50%;
-  transform: translate(-50%, -50%); /* Center the button properly */
   padding: 10px 20px;
   background: #4CAF50;
   border-radius: 5px;
@@ -58,4 +58,17 @@ body {
   cursor: pointer;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   color: white;
+  transition: all 0.3s ease;
+  min-width: 80px;
+}
+
+.valentine-heading {
+  position: absolute;
+  top: calc(50% - 100px);
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
 }

@@ -1,9 +1,31 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export default function Page() {
   const targetRef = useRef<HTMLButtonElement | null>(null);
+  const [scale, setScale] = useState(1);
+  const [yesText, setYesText] = useState('Yes');
+
+  const phrases = [
+    'Yes',
+    'Are you sure?',
+    'Pretty please',
+    'Think again!',
+    'You know you want to!',
+    'Pleeeease?',
+  ];
+
+  useEffect(() => {
+    let index = 0;
+    const interval = setInterval(() => {
+      index = (index + 1) % phrases.length;
+      setYesText(phrases[index]);
+      setScale(1 + (index * 0.1)); // Gradually increase size
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   function getDistance(x1: number, y1: number, x2: number, y2: number) {
     return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
@@ -109,9 +131,17 @@ export default function Page() {
   }, []);
 
   return (
-    <div className="button-container">
-      <button className="yes-button">Yes</button>
-      <button ref={targetRef} id="target">No</button>
-    </div>
+    <>
+      <div className="button-container">
+        <h1 className="valentine-heading">Will you be my Valentine?</h1>
+        <button 
+          className="yes-button" 
+          style={{ transform: `translate(-50%, -50%) scale(${scale})` }}
+        >
+          {yesText}
+        </button>
+        <button ref={targetRef} id="target">No</button>
+      </div>
+    </>
   );
 }
