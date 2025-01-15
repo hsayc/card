@@ -3,9 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 
 export default function Page() {
-  const [attempts, setAttempts] = useState(0);
   const targetRef = useRef<HTMLDivElement | null>(null);
-  const scoreRef = useRef<HTMLDivElement | null>(null);
 
   function getDistance(x1: number, y1: number, x2: number, y2: number) {
     return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
@@ -96,9 +94,6 @@ export default function Page() {
         rect.left + rect.width / 2,
         rect.top + rect.height / 2
       );
-      if (distance < 100) {
-        setAttempts((prev) => prev + 1);
-      }
     }
 
     function handleResize() {
@@ -129,7 +124,6 @@ export default function Page() {
   return (
     <>
       <div ref={targetRef} id="target" />
-      <div ref={scoreRef} id="score">Attempts: {attempts}</div>
       <style jsx global>{`
         body {
           margin: 0;
