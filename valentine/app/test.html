@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        
+        #target {
+            width: 50px;
+            height: 50px;
+            background: #ff6b6b;
+            border-radius: 50%;
+            position: absolute;
+            transition: all 0.1s ease-out;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        #score {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+    <div id="target"></div>
+    <div id="score">Attempts: 0</div>
+
+    <script>
+        const target = document.getElementById('target');
+        const scoreElement = document.getElementById('score');
+        let attempts = 0;
+
+        // Initial position
+        target.style.left = '50%';
+        target.style.top = '50%';
+
+        function getDistance(x1, y1, x2, y2) {
+            return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+        }
+
+        function findBestEscapeDirection(mouseX, mouseY, targetX, targetY) {
+            // Check 8 possible directions
+            const directions = [
+                [0, -1],   // up
+                [1, -1],   // up-right
+                [1, 0],    // right
+                [1, 1],    // down-right
+                [0, 1],    // down
+                [-1, 1],   // down-left
+                [-1, 0],   // left
+                [-1, -1]   // up-left
+            ];
+
+            let bestDirection = null;
+            let maxDistance = -1;
+
+            for (const [dx, dy] of directions) {
+                // Project the position after moving in this direction
+                const projectedX = targetX + dx * 100;
+                const projectedY = targetY + dy * 100;
+
+                // Check if the projected position is within bounds
+                if (projectedX < 0 || projectedX > window.innerWidth - 50 ||
+                    projectedY < 0 || projectedY > window.innerHeight - 50) {
+                    continue;
+                }
+
+                // Calculate distance from mouse if we moved in this direction
+                const distance = getDistance(mouseX, mouseY, projectedX, projectedY);
+
+                if (distance > maxDistance) {
+                    maxDistance = distance;
+                    bestDirection = [dx, dy];
+                }
+            }
+
+            // If no good direction found (stuck in corner), choose the direction toward center
+            if (!bestDirection) {
+                const centerX = window.innerWidth / 2;
+                const centerY = window.innerHeight / 2;
+                bestDirection = [
+                    Math.sign(centerX - targetX),
+                    Math.sign(centerY - targetY)
+                ];
+            }
+
+            return bestDirection;
+        }
+
+        function moveTarget(mouseX, mouseY) {
+            const rect = target.getBoundingClientRect();
+            const targetX = rect.left + rect.width / 2;
+            const targetY = rect.top + rect.height / 2;
+
+            const distance = getDistance(mouseX, mouseY, targetX, targetY);
+            
+            // Start evading when mouse is within 250px
+            if (distance < 250) {
+                const [dx, dy] = findBestEscapeDirection(mouseX, mouseY, targetX, targetY);
+                
+                // Move faster when mouse is closer
+                const speed = Math.max(15, (250 - distance) / 2);
+                
+                let newX = targetX + dx * speed;
+                let newY = targetY + dy * speed;
+
+                // Keep target within bounds
+                newX = Math.max(25, Math.min(window.innerWidth - 75, newX));
+                newY = Math.max(25, Math.min(window.innerHeight - 75, newY));
+
+                target.style.left = `${newX}px`;
+                target.style.top = `${newY}px`;
+            }
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            moveTarget(e.clientX, e.clientY);
+        });
+
+        // Track attempts to catch the circle
+        document.addEventListener('click', (e) => {
+            const rect = target.getBoundingClientRect();
+            const distance = getDistance(
+                e.clientX, 
+                e.clientY, 
+                rect.left + rect.width / 2, 
+                rect.top + rect.height / 2
+            );
+            
+            if (distance < 100) {
+                attempts++;
+                scoreElement.textContent = `Attempts: ${attempts}`;
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            const rect = target.getBoundingClientRect();
+            const newX = Math.min(rect.left, window.innerWidth - 75);
+            const newY = Math.min(rect.top, window.innerHeight - 75);
+            target.style.left = `${newX}px`;
+            target.style.top = `${newY}px`;
+        });
+    </script>
+</body>
+</html>
