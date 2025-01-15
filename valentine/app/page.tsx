@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 export default function Page() {
-  const targetRef = useRef<HTMLDivElement | null>(null);
+  const targetRef = useRef<HTMLButtonElement | null>(null);
 
   function getDistance(x1: number, y1: number, x2: number, y2: number) {
     return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
@@ -122,36 +122,9 @@ export default function Page() {
   }, []);
 
   return (
-    <>
-      <div ref={targetRef} id="target" />
-      <style jsx global>{`
-        body {
-          margin: 0;
-          overflow: hidden;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 100vh;
-          background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        }
-        #target {
-          width: 50px;
-          height: 50px;
-          background: #ff6b6b;
-          border-radius: 50%;
-          transition: all 0.1s ease-out;
-          cursor: pointer;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        #score {
-          position: fixed;
-          top: 20px;
-          right: 20px;
-          font-family: Arial, sans-serif;
-          font-size: 20px;
-          color: #444;
-        }
-      `}</style>
-    </>
+    <div className="button-container">
+      <button className="yes-button">Yes</button>
+      <button ref={targetRef} id="target">No</button>
+    </div>
   );
 }
