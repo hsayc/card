@@ -11,7 +11,7 @@ export default function Page() {
     'Yes',
     'Are you sure?',
     'Pretty please',
-    'Think again!',
+    'Cmonnn',
     'You know you want to!',
     'Pleeeease?',
   ];
@@ -118,9 +118,7 @@ export default function Page() {
 
     // Initial position
     targetEl.style.position = 'absolute';
-    targetEl.style.left = '50%';
-    targetEl.style.top = '50%';
-
+    
     document.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('resize', handleResize);
 
