@@ -4,12 +4,13 @@ import { useState, useEffect, useRef } from 'react';
 
 export default function Page() {
   const targetRef = useRef<HTMLButtonElement | null>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const [scale, setScale] = useState(1);
   const [yesText, setYesText] = useState('Yes');
   const [hearts, setHearts] = useState<{ id: number; style: React.CSSProperties }[]>([]);
+  const [showModal, setShowModal] = useState(false);
   
   useEffect(() => {
-    // Generate hearts only on the client
     const generatedHearts = Array(20)
       .fill(0)
       .map((_, i) => ({
@@ -37,9 +38,11 @@ export default function Page() {
     const interval = setInterval(() => {
       index = (index + 1) % phrases.length;
       setYesText(phrases[index]);
-      setScale(1 + (index * 0.1)); // Gradually increase size
+      setScale(1 + (index * 0.1));
     }, 5000);
-
+    
+    intervalRef.current = interval; // Store interval ID
+    
     return () => clearInterval(interval);
   }, []);
 
@@ -144,8 +147,25 @@ export default function Page() {
     };
   }, []);
 
+  const handleYesClick = () => {
+    setShowModal(true);
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current); // Clear interval using stored ID
+    }
+    setYesText('Yes!');
+  };
+
   return (
     <>
+      {showModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h2>Yayyyyy! 🎉</h2>
+            <p>Thank you for being my Valentine! ❤️</p>
+            <button onClick={() => setShowModal(false)}>Close</button>
+          </div>
+        </div>
+      )}
       <div className="hearts-container">
         {hearts.map(({ id, style }) => (
           <div
@@ -158,10 +178,11 @@ export default function Page() {
         ))}
       </div>
       <div className="button-container">
-        <h1 className="valentine-heading">Will you be my Valentine?</h1>
+        <h1 className="valentine-heading">Ruchi, will you be my Valentine?</h1>
         <button 
           className="yes-button" 
           style={{ transform: `translate(-50%, -50%) scale(${scale})` }}
+          onClick={handleYesClick}
         >
           {yesText}
         </button>
