@@ -6,7 +6,22 @@ export default function Page() {
   const targetRef = useRef<HTMLButtonElement | null>(null);
   const [scale, setScale] = useState(1);
   const [yesText, setYesText] = useState('Yes');
-  const [hearts, setHearts] = useState<Array<{id: number, style: React.CSSProperties}>>([]);
+  const [hearts, setHearts] = useState<{ id: number; style: React.CSSProperties }[]>([]);
+  
+  useEffect(() => {
+    // Generate hearts only on the client
+    const generatedHearts = Array(20)
+      .fill(0)
+      .map((_, i) => ({
+        id: i,
+        style: {
+          left: `${Math.random() * 100}%`,
+          animationDelay: `${Math.random() * 8}s`,
+          animationDuration: `${8 + Math.random() * 6}s`,
+        },
+      }));
+    setHearts(generatedHearts);
+  }, []);
 
   const phrases = [
     'Yes',
@@ -26,19 +41,6 @@ export default function Page() {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    const newHearts = Array(20).fill(0).map((_, i) => ({
-      id: i,
-      style: {
-        left: `${Math.random() * 100}%`,
-        top: `${Math.random() * 200}%`, // This will position hearts throughout the screen
-        animationDelay: `${Math.random() * 8}s`,
-        animationDuration: `${8 + Math.random() * 6}s`
-      }
-    }));
-    setHearts(newHearts);
   }, []);
 
   function getDistance(x1: number, y1: number, x2: number, y2: number) {
