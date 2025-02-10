@@ -160,8 +160,11 @@ export default function Page() {
       {showModal && (
         <div className="modal-overlay">
           <div className="modal">
-            <h2>Yayyyyy! 🎉</h2>
-            <p>Thank you for being my Valentine! ❤️</p>
+            <h2>Yayyyyy!</h2>
+            <div className="card-container">
+              <img src="/card.svg" alt="Valentine's Card" className="valentine-card" />
+            </div>
+            <p>Thank you for being my Valentine! I love you &lt;3 </p>
             <button onClick={() => setShowModal(false)}>Close</button>
           </div>
         </div>
