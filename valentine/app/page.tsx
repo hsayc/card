@@ -6,7 +6,7 @@ export default function Page() {
   const targetRef = useRef<HTMLButtonElement | null>(null);
   const [scale, setScale] = useState(1);
   const [yesText, setYesText] = useState('Yes');
-  const [hearts, setHearts] = useState<Array<{id: number, style: any}>>([]);
+  const [hearts, setHearts] = useState<Array<{id: number, style: React.CSSProperties}>>([]);
 
   const phrases = [
     'Yes',
